@@ -24,7 +24,7 @@ The [Template.json](https://github.com/Ganapathivarma07/LRS-Migration-AzureSQLMI
 - A storage account
 
 
-![alt image](https://github.com/Ganapathivarma07/LRS-Migration-AzureSQLMI/blob/c65c38f40aa626403e011e6bf2a28e647ee5a102/Images/log-replay-service-Architecture.png)
+![alt image](https://github.com/nikhil7891/Highly-Available-Web-Layer-and-DB-architecture/blob/master/Architecturedeployment.png)
 
 
 
