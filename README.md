@@ -1,5 +1,5 @@
 # Title: Highly Available Web Layer and DB architecture
-This template could be useful in quickly deploy the resources where you need VNet with predefined Subnets(Web, Management, Database & Bastion),Web VMs in HA(AvSet) with IIS Roles installed,- Load Balancer for Web VMs with default Inbound IIS application configurations & Outbound configuration for internet access and Bastion Service for securely accessing Virtual Machines
+This template could be useful in quickly deploy the resources where you need VNet with predefined Subnets(Web, Management, Database & Bastion),Web VMs in HA(AvSet) with IIS Roles installed,Load Balancer for Web VMs with default Inbound IIS application configurations & Outbound configuration for internet access and Bastion Service for securely accessing Virtual Machines
 
 
 
