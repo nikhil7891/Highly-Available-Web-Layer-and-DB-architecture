@@ -1,13 +1,5 @@
-# Title: Deploy Three Tier Architecture
-This template could be useful in quickly deploy the resources for below scenerios:-
-
-Cloud born Three tier application architecture with web and application layer
-
-This template can be customised to meet the requirement of deploying three tier architecture for the Hybrid scenerios
-
-Rehosting of apllications from onprem to cloud
-
-Quickly deploy POCs set up for application workload testing
+# Title: Highly Available Web Layer and DB architecture
+This template could be useful in quickly deploy the resources where you need VNet with predefined Subnets(Web, Management, Database & Bastion),Web VMs in HA(AvSet) with IIS Roles installed,- Load Balancer for Web VMs with default Inbound IIS application configurations & Outbound configuration for internet access and Bastion Service for securely accessing Virtual Machines
 
 
 
