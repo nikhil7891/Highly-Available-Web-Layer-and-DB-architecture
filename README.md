@@ -19,9 +19,13 @@ In this tutorial, you will deploy resources required for the migration. Then, yo
 
 The [Template.json](https://github.com/nikhil7891/Highly-Available-Web-Layer-and-DB-architecture/blob/master/template.json) Azure Resource Manager template will help you automatically deploy the diagram below, which includes:
 
-- SQL Server instance on Azure VM.
-- Azure SQL managed instance inside a virtual network
-- A storage account
+1. Resource Group in preferred location.
+2. VNet with predefined Subnets(Web, Management, Database & Bastion)
+3. Web VMs in HA(AvSet) with IIS Roles installed.
+4. SQL VM  with 1 TB Data & 1 TB Log Disks.
+5. Load Balancer for Web VMs with default Inbound IIS application configurations & Outbound configuration for internet access.
+6. Bastion Service for securely accessing Virtual Machines.
+7. NSG for Web VM(with Port 80 rule) & Database VM.
 
 
 ![alt image](https://github.com/nikhil7891/Highly-Available-Web-Layer-and-DB-architecture/blob/master/Architecturedeployment.png)
@@ -51,24 +55,16 @@ Final URL: <Base URL>/<uri>
 
 ## Azure services and related products
 
-- Azure Blob storage
-- Azure Virutal machine
-- Azure SQL Managed Instance
+The template will create following resources as per the standard naming conventions:-
+1. Resource Group in preferred location.
+2. VNet with predefined Subnets(Web, Management, Database & Bastion)
+3. Web VMs in HA(AvSet) with IIS Roles installed.
+4. SQL VM  with 1 TB Data & 1 TB Log Disks.
+5. Load Balancer for Web VMs with default Inbound IIS application configurations & Outbound configuration for internet access.
+6. Bastion Service for securely accessing Virtual Machines.
+7. NSG for Web VM(with Port 80 rule) & Database VM.
 
 
-## Pre-requisites:
-
-Consider the requirements in this section to get started with using LRS to migrate. 
-
-### SQL Server 
-
-Make sure you have the following requirements for SQL Server: 
-
-- SQL Server versions 2008 to 2019
-- Full backup of databases (one or multiple files)
-- Differential backup (one or multiple files)
-- Log backup (not split for a transaction log file)
-- `CHECKSUM` enabled for backups (mandatory)
 
 ### Azure 
 
@@ -86,13 +82,7 @@ Running LRS through the provided clients requires one of the following Azure rol
 - [SQL Managed Instance Contributor](../../role-based-access-control/built-in-roles.md#sql-managed-instance-contributor) role
 - Custom role with the following permission: `Microsoft.Sql/managedInstances/databases/*`
 
-## Requirements
 
-Please ensure the following requirements are met:
-- Use the full recovery model on SQL Server (mandatory).
-- Use `CHECKSUM` for backups on SQL Server (mandatory).
-- Place backup files for an individual database inside a separate folder in a flat-file structure (mandatory). Nested folders inside database folders are not supported.
-- Plan to complete the migration within 36 hours after you start LRS (mandatory). This is a grace period during which system-managed software patches are postponed.
 
 ## Deployment steps
 
