@@ -1,19 +1,32 @@
-# Tutorial: Migrate SQL Server to Azure SQL Managed Instance using Log Replay Service (Preview)
+# Title: Deploy Three Tier Architecture
+This template could be useful in quickly deploy the resources for below scenerios:-
 
-This template allows you to create a SQL Server instance on Virtual Machine which acts as a source for migration and a Azure SQL Managed instance inside a new virtual network. Storage account is already provisioned which is required to copy and transfer SQL Server backups between source and target.
+Cloud born Three tier application architecture with web and application layer
+
+This template can be customised to meet the requirement of deploying three tier architecture for the Hybrid scenerios
+
+Rehosting of apllications from onprem to cloud
+
+Quickly deploy POCs set up for application workload testing
+
 
 
 # Solution overview and deployed resources. 
+Layers are a way to separate responsibilities and manage dependencies. Each layer has a specific responsibility. A higher layer can use services in a lower layer, but not the other way around.
 
-In this tutorial, you will deploy resources required for the migration. Then, you migrate the AdventureWorks database from a source self-hosted SQL Server instance to a target Azure SQL Server Managed Instance with minimal downtime by using log replay service.
+Tiers are physically separated, running on separate machines. A tier can call to another tier directly, or use asynchronous messaging (message queue). Although each layer might be hosted in its own tier, that's not required. Several layers might be hosted on the same tier. Physically separating the tiers improves scalability and resiliency, but also adds latency from the additional network communication.
+
+A traditional three-tier application has a presentation tier, a middle tier, and a database tier.
 
 
 ## Target audience
+Infrastructure Architect
 
-- Infrastructure Architect
-- Application Developer
-- IT Professional
-- Cloud Solution Architect
+Application Developer
+
+IT Professional
+
+Cloud Solution Architect
 
 # Architecture
 
@@ -64,64 +77,18 @@ The template will create following resources as per the standard naming conventi
 6. Bastion Service for securely accessing Virtual Machines.
 7. NSG for Web VM(with Port 80 rule) & Database VM.
 
-
-
-### Azure 
-
-Make sure you have the following requirements for Azure: 
-
-- PowerShell Az.SQL module version 2.16.0 or later ([installed](https://www.powershellgallery.com/packages/Az.Sql/) or accessed through [Azure Cloud Shell](/azure/cloud-shell/))
-- Azure CLI version 2.19.0 or later ([installed](/cli/azure/install-azure-cli))
-- Azure Blob Storage container provisioned
-- Shared access signature (SAS) security token with read and list permissions generated for the Blob Storage container
-
-### Azure RBAC permissions
-
-Running LRS through the provided clients requires one of the following Azure roles:
-- Subscription Owner role
-- [SQL Managed Instance Contributor](../../role-based-access-control/built-in-roles.md#sql-managed-instance-contributor) role
-- Custom role with the following permission: `Microsoft.Sql/managedInstances/databases/*`
-
-
-
 ## Deployment steps
 
-1. Create Azure blob container in a storage account
 
-Follow these steps to Create Azure blob container 
-a. To create a container, expand the storage account you created in the proceeding step. 
-b. Select Blob Containers, right-click and select Create Blob Container. 
-c. Enter the name for your blob container.
-
-2. Migration steps
-
-Follow these steps in the diagram below to start the migration using log replay service
-
-:::image type="content" source="./media/log-replay-service-migrate/log-replay-service-conceptual.png" alt-text="Diagram that explains the Log Replay Service orchestration steps for SQL Managed Instance." border="false":::
-	
-| Operation | Details |
-| :----------------------------- | :------------------------- |
-| **1. Copy database backups from SQL Server to Blob Storage**. | Copy full, differential, and log backups from SQL Server to a Blob Storage container by using [AzCopy](../../storage/common/storage-use-azcopy-v10.md) or [Azure Storage Explorer](https://azure.microsoft.com/features/storage-explorer/). <br /><br />Use any file names. LRS doesn't require a specific file-naming convention.<br /><br />Use a separate folder for each database when migrating several databases. |
-| **2. Start LRS in the cloud**. | You can start the service with PowerShell ([start-azsqlinstancedatabaselogreplay](/powershell/module/az.sql/start-azsqlinstancedatabaselogreplay)) or the Azure CLI ([az_sql_midb_log_replay_start cmdlets](/cli/azure/sql/midb/log-replay#az-sql-midb-log-replay-start)). <br /><br /> Start LRS separately for each database that points to a backup folder on Blob Storage. <br /><br /> After the service starts, it will take backups from the Blob Storage container and start restoring them to SQL Managed Instance.<br /><br /> When started in continuous mode, LRS restores all the  backups initially uploaded and then watches for any new files uploaded to the folder. The service will continuously apply logs based on the log sequence number (LSN) chain until it's stopped manually. |
-| **2.1. Monitor the operation's progress**. | You can monitor progress of the restore operation with PowerShell ([get-azsqlinstancedatabaselogreplay](/powershell/module/az.sql/get-azsqlinstancedatabaselogreplay)) or the Azure CLI ([az_sql_midb_log_replay_show cmdlets](/cli/azure/sql/midb/log-replay#az-sql-midb-log-replay-show)). |
-| **2.2. Stop the operation if needed**. | If you need to stop the migration process, use PowerShell ([stop-azsqlinstancedatabaselogreplay](/powershell/module/az.sql/stop-azsqlinstancedatabaselogreplay)) or the Azure CLI ([az_sql_midb_log_replay_stop](/cli/azure/sql/midb/log-replay#az-sql-midb-log-replay-stop)). <br /><br /> Stopping the operation deletes the database that you're restoring to SQL Managed Instance. After you stop an operation, you can't resume LRS for a database. You need to restart the migration process from the beginning. |
-| **3. Cut over to the cloud when you're ready**. | Stop the application and workload. Take the last log-tail backup and upload it to Azure Blob Storage.<br /><br /> Complete the cutover by initiating an LRS `complete` operation with PowerShell ([complete-azsqlinstancedatabaselogreplay](/powershell/module/az.sql/complete-azsqlinstancedatabaselogreplay)) or the Azure CLI [az_sql_midb_log_replay_complete](/cli/azure/sql/midb/log-replay#az-sql-midb-log-replay-complete). This operation stops LRS and brings the database online for read and write workloads on SQL Managed Instance.<br /><br /> Repoint the application connection string from SQL Server to SQL Managed Instance. You will need to orchestrate this step yourself, either through a manual connection string change in your application, or automatically (for example, if your application can read the connection string from a property, or a database). |
-
-## Best practices
-
-We recommend the following best practices:
-- Run [Data Migration Assistant](/sql/dma/dma-overview) to validate that your databases are ready to be migrated to SQL Managed Instance. 
-- Split full and differential backups into multiple files, instead of using a single file.
-- Enable backup compression to help the network transfer speeds.
-- Use Cloud Shell to run PowerShell or CLI scripts, because it will always be updated to the latest cmdlets released.
 
 ## Related references
+https://docs.microsoft.com/en-us/azure/architecture/guide/architecture-styles/n-tier
 
-1.	https://docs.microsoft.com/en-gb/azure/azure-sql/managed-instance/log-replay-service-migrate
-2.	https://docs.microsoft.com/en-us/sql/relational-databases/backup-restore/backup-overview-sql-server?view=sql-server-ver15
-3.	https://docs.microsoft.com/en-us/azure/storage/blobs/quickstart-storage-explorer
-4.	https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azcopy-v10
-5.	https://techcommunity.microsoft.com/t5/azure-sql-blog/migrate-databases-from-sql-server-to-sql-managed-instance-using/ba-p/2144303
+https://docs.microsoft.com/en-us/azure/architecture/reference-architectures/n-tier/n-tier-sql-server
+
+https://docs.microsoft.com/en-us/azure/architecture/high-availability/ref-arch-iaas-web-and-db
+
+
 
 
 ## License & Contribute
