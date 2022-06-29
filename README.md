@@ -17,7 +17,7 @@ In this tutorial, you will deploy resources required for the migration. Then, yo
 
 # Architecture
 
-The [Template.json](https://github.com/Ganapathivarma07/LRS-Migration-AzureSQLMI/blob/master/template.json) Azure Resource Manager template will help you automatically deploy the diagram below, which includes:
+The [Template.json](https://github.com/nikhil7891/Highly-Available-Web-Layer-and-DB-architecture/blob/master/template.json) Azure Resource Manager template will help you automatically deploy the diagram below, which includes:
 
 - SQL Server instance on Azure VM.
 - Azure SQL managed instance inside a virtual network
