@@ -40,7 +40,7 @@ Base URL: https://portal.azure.com/#create/Microsoft.Template/uri
 Final URL: <Base URL>/<uri>
 -->
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)]
-(https%3A%2F%2Fraw.githubusercontent.com%2Fnikhil7891%2FHighly-Available-Web-Layer-and-DB-architecture%2Fmaster%2Ftemplate.json)
+(https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fnikhil7891%2FHighly-Available-Web-Layer-and-DB-architecture%2Fmaster%2Ftemplate.json)
 
 
 ## Deploying an ARM Template using the Azure portal
